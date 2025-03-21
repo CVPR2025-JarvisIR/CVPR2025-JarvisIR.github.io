@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="imgs/icon.png">
+    <title>JarvisIR: Elevating Autonomous Driving Perception with Intelligent Image Restoration</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 添加 Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Orbitron:wght@400;500&family=Rajdhani:wght@300;400&family=Audiowide&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --text-color: #333;
+            --light-bg: #f8f9fa;
+            --dark-bg: #1e272e;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Scroll animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Header styling */
+        header {
+            background: linear-gradient(120deg, #e0eafc, #cfdef3);
+            color: #2c3e50;
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-container {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="none" stroke="%232c3e50" stroke-width="0.3" stroke-opacity="0.1" width="100" height="100"/></svg>');
+            opacity: 0.1;
+            z-index: 1;
+        }
+        
+        .title-container {
+            max-width: 900px;
+            margin: 0 auto;
+            animation: fadeIn 1.2s ease-in-out;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        
+        .authors {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+        
+        .institution {
+            font-style: italic;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+        
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.8rem 1.5rem;
+            background-color: var(--secondary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .cta-button i {
+            margin-right: 8px;
+        }
+        
+        /* Main content */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+        
+        section {
+            margin-bottom: 4rem;
+        }
+        
+        h2 {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+        }
+        
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+        
+        /* Abstract section */
+        .abstract {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Method section */
+        .method-overview {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 2rem 0;
+        }
+        
+        .method-figure {
+            width: 100%;
+            max-width: 900px;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        .method-figure img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .key-contributions {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-top: 2rem;
+        }
+        
+        .contributions-list {
+            list-style-type: none;
+            padding-left: 1.5rem;
+        }
+        
+        .contributions-list li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .contributions-list li::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            color: var(--secondary-color);
+        }
+        
+        /* Results section */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+            position: relative;
+        }
+        
+        .result-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: visible;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+        
+        .result-card:hover {
+            z-index: 100;
+        }
+        
+        .comparison-slider {
+            position: relative;
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            border-radius: 8px 8px 0 0;
+            user-select: none; /* 防止拖动时选中文本 */
+        }
+        
+        .comparison-figure {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+        
+        .comparison-before,
+        .comparison-after {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .comparison-before {
+            clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
+            z-index: 2;
+        }
+        
+        .comparison-separator {
+            position: absolute;
+            width: 4px;
+            height: 100%;
+            background: white;
+            left: 50%;
+            transform: translateX(-50%);
+            cursor: ew-resize;
+            z-index: 3;
+        }
+        
+        .comparison-separator::before {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.5);  /* 半透明背景 */
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: ew-resize;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(7px);
+            -webkit-backdrop-filter: blur(7px);  /* Safari 支持 */
+        }
+        
+        .comparison-separator::after {
+            content: '◁▷';  /* 改为左右三角形 */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #333;
+            font-size: 16px;
+            cursor: ew-resize;
+            font-weight: bold;
+            z-index: 4;
+        }
+        
+        .result-info {
+            padding: 1.2rem;
+            position: relative;
+            overflow: visible;
+            cursor: pointer;
+            height: 50px;
+            transition: all 0.3s ease;
+        }
+        
+        .result-info:hover {
+            height: 50px;
+        }
+        
+        .info-logo {
+            width: 30px;  /* 设置图标宽度 */
+            height: 30px; /* 设置图标高度 */
+            margin-right: 15px; /* 添加右侧间距 */
+            object-fit: contain; /* 保持图片比例 */
+        }
+        
+        .info-text {
+            flex: 1; /* 让文字占据剩余空间 */
+        }
+        
+        .info-default {
+            display: flex;
+            align-items: center;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            opacity: 1;
+            transform: translateY(0);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            padding: 1.2rem;
+            background-color: white;
+        }
+        
+        .info-hover {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            padding: 1.2rem;
+            background-color: white;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            opacity: 0;
+            transform: translateY(-20px);
+            z-index: 10;
+            pointer-events: none;
+        }
+        
+        .result-info:hover .info-default {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .result-info:hover .info-hover {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        
+        .info-hover p {
+            font-size: 0.95rem;
+            margin: 0;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .result-info h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.6rem;
+            color: var(--primary-color);
+        }
+        
+        /* Dataset section */
+        .dataset-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .dataset-card {
+            flex: 1 1 400px;
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .dataset-card h3 {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .dataset-card h3 i {
+            margin-right: 10px;
+            color: var(--secondary-color);
+        }
+        
+        .dataset-stats {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .stat {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        /* Paper section */
+        .paper-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            align-items: stretch;
+        }
+        
+        .paper-image {
+            flex: 1 1 300px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        .paper-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .paper-metadata {
+            flex: 1 1 500px;
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .citation-box {
+            background-color: var(--light-bg);
+            padding: 1.2rem;
+            border-radius: 6px;
+            font-family: monospace;
+            margin-top: 1.5rem;
+            white-space: pre-wrap;
+            font-size: 0.9rem;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        
+        .copy-button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+        
+        .copy-button:hover {
+            background-color: #2980b9;
+        }
+        
+        .copy-button i {
+            margin-right: 6px;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .footer-note {
+            margin-bottom: 1.5rem;
+            opacity: 0.8;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            opacity: 1;
+        }
+        
+        .copyright {
+            opacity: 0.6;
+            font-size: 0.9rem;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+            }
+            
+            .paper-info {
+                flex-direction: column;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .cta-button {
+                width: 100%;
+                text-align: center;
+                justify-content: center;
+            }
+        }
+        
+        /* 添加新的样式类 */
+        .highlight-text {
+            font-style: italic;
+            color: #3498db;
+            opacity: 0.8;
+        }
+        
+        .highlight-text-orange {
+            font-style: italic;
+            color: #e67e22;  /* 淡橙色 */
+            opacity: 0.8;
+        }
+        
+        /* Fixed Navigation */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.5rem;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            transition: background-color 0.3s ease;
+        }
+        
+        .nav-left {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-right {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-button {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            opacity: 0.8;
+            transition: opacity 0.3s, color 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .nav-button:hover {
+            opacity: 1;
+        }
+        
+        .nav-button i {
+            margin-right: 8px;
+        }
+        
+        /* 添加背景和文字颜色变化的类 */
+        .top-nav.scrolled {
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .top-nav.scrolled .nav-button {
+            color: #333;
+        }
+        
+        /* Hero Header */
+        .hero-header {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #000;
+        }
+        
+        .slider-container {
+            width: 100%;
+            height: 50%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .slider-row {
+            display: flex;
+            height: 100%;
+            position: absolute;
+            width: 200%;
+        }
+        
+        .slider-top {
+            animation: slideLeft 30s linear infinite;
+        }
+        
+        .slider-bottom {
+            animation: slideRight 30s linear infinite;
+        }
+        
+        @keyframes slideLeft {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        
+        @keyframes slideRight {
+            0% { transform: translateX(-50%); }
+            100% { transform: translateX(0); }
+        }
+        
+        .slider-item {
+            flex: 0 0 25%;
+            height: 100%;
+            position: relative;
+        }
+        
+        .slider-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.7;
+        }
+        
+        .hero-title {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            text-align: center;
+            z-index: 10;
+            width: 90%;
+            max-width: 1200px;
+        }
+        
+        .hero-title h1 {
+            font-size: 7rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 0.2s;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .logo {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            filter: drop-shadow(2px 2px 8px rgba(0,0,0,0.7));
+        }
+        
+        .hero-title h2 {
+            font-size: 5rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 1.2s;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+            font-weight: 400;
+        }
+        
+        .authors-section {
+            position: absolute;
+            bottom: 2rem;
+            left: 0;
+            right: 0;
+            padding: 2rem;
+            text-align: center;
+            color: white;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+            z-index: 10;
+        }
+        
+        .authors {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .institution {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.8;
+        }
+        
+        .publication {
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 768px) {
+            .authors-section {
+                padding: 1rem;
+                bottom: 1rem;
+            }
+            
+            .authors, .institution, .publication {
+                font-size: 1rem;
+            }
+        }
+        
+        .alternating-text {
+            position: relative;
+            height: 180px;  /* 增加高度以适应两行文本 */
+            text-align: center;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .text-item {
+            position: absolute;
+            width: 100%;
+            left: 0;
+            opacity: 0;
+            visibility: hidden;
+            color: #fffafa;  
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+            font-family: 'MatterBold', sans-serif;
+            font-size: 100px;
+            letter-spacing: -4.8px;
+            line-height: .94;
+            animation-fill-mode: forwards;
+            font-style: italic;
+            font-weight: bold;
+        }
+        
+        @keyframes slideOutDown {  /* 改为向下消失 */
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+                visibility: visible;
+            }
+            100% {
+                transform: translateY(100%);  /* 改为向下移动 */
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+        
+        @keyframes slideInUp {
+            0% {
+                transform: translateY(100%);
+                opacity: 0;
+                visibility: visible;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="nav-left">
+            <a href="#" class="nav-button"><i class="far fa-file-pdf"></i> PAPER</a>
+            <a href="#" class="nav-button"><i class="fab fa-github"></i> CODE</a>
+        </div>
+        <div class="nav-right">
+            <a href="#" class="nav-button">CONTACT</a>
+        </div>
+    </nav>
+
+    <div class="hero-header">
+        <div class="slider-container">
+            <div class="slider-row slider-top">
+                <div class="slider-item"><img src="imgs/before_rain.png" alt="Autonomous driving in rain"></div>
+                <div class="slider-item"><img src="imgs/fog1.png" alt="Autonomous driving in fog"></div>
+                <div class="slider-item"><img src="imgs/night1.png" alt="Autonomous driving at night"></div>
+                <div class="slider-item"><img src="imgs/snow1.png" alt="Autonomous driving in snow"></div>
+                <!-- Repeat for continuous animation -->
+                <div class="slider-item"><img src="imgs/before_rain.png" alt="Autonomous driving in rain"></div>
+                <div class="slider-item"><img src="imgs/fog1.png" alt="Autonomous driving in fog"></div>
+                <div class="slider-item"><img src="imgs/night1.png" alt="Autonomous driving at night"></div>
+                <div class="slider-item"><img src="imgs/snow1.png" alt="Autonomous driving in snow"></div>
+            </div>
+        </div>
+        
+        <div class="slider-container">
+            <div class="slider-row slider-bottom">
+                <div class="slider-item"><img src="imgs/after_rain.png" alt="Restored image in rain"></div>
+                <div class="slider-item"><img src="imgs/fog2.png" alt="Restored image in fog"></div>
+                <div class="slider-item"><img src="imgs/night2.png" alt="Restored image at night"></div>
+                <div class="slider-item"><img src="imgs/snow2.png" alt="Restored image in snow"></div>
+                <!-- Repeat for continuous animation -->
+                <div class="slider-item"><img src="imgs/after_rain.png" alt="Restored image in rain"></div>
+                <div class="slider-item"><img src="imgs/fog2.png" alt="Restored image in fog"></div>
+                <div class="slider-item"><img src="imgs/night2.png" alt="Restored image at night"></div>
+                <div class="slider-item"><img src="imgs/snow2.png" alt="Restored image in snow"></div>
+            </div>
+        </div>
+        
+        <div class="hero-title">
+            <h1>
+                <!-- 加上logo -->
+                <img src="imgs/icon.png" alt="JarvisIR Logo" class="logo">
+                JarvisIR
+            </h1>
+            <div class="alternating-text">
+                <h2 class="text-item active"><em><strong>for intelligent image restoration</strong></em></h2>
+                <h2 class="text-item"><em><strong>Intelligent Image Restoration for Autonomous Driving</strong></em></h2>
+            </div>
+        </div>
+
+        <!-- Move authors-section inside hero-header and update its styles -->
+        <div class="authors-section">
+            <div class="authors">Author 1, Author 2, Author 3, Author 4, Author 5</div>
+            <div class="institution">Xiamen University, Tecent, Pico, Huawei Noah's Ark Lab</div>
+            <div class="publication">Accepted by CVPR 2025</div>
+        </div>
+    </div>
+
+    <main>
+        <section id="results" class="fade-in">
+            <h2>Results</h2>
+            <p>JarvisIR demonstrates superior image restoration capabilities across various degradation types. Hover over the images below to see the before/after comparison.</p>
+            
+            <div class="results-grid">
+                <div class="result-card">
+                    <div class="result-info">
+                        <div class="info-default">
+                            <img src="imgs/icon.png" alt="JarvisIR Logo" class="info-logo">
+                            <div class="info-text">
+                                <h4>Rain Scene</h4>
+                            </div>
+                        </div>
+                        <div class="info-hover">
+                            <p>
+                                <span class="highlight-text">The image depicts an outdoor scene viewed
+                                    through a wet windshield, with water droplets significantly
+                                    obscuring the view. The evaluated image exhibits severe
+                                    distortion caused by the water droplets, resulting in a loss of
+                                    sharpness and clarity. </span> 
+                                <br>So the tools are:<br/>
+                                {Task1: deraining <span class="highlight-text-orange">(Img2img-turbo)</span>, 
+                                    Task2: denosing <span class="highlight-text-orange">(SCUnet)</span>, 
+                                    Task3: deRaindrop <span class="highlight-text-orange">(IDT)</span>}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="comparison-slider">
+                        <figure class="comparison-figure">
+                            <img src="imgs/before_rain.png" alt="Before" class="comparison-before">
+                            <div class="comparison-separator"></div>
+                            <img src="imgs/after_rain.png" alt="After" class="comparison-after">
+                        </figure>
+                    </div>
+
+                </div>
+                
+                <div class="result-card">
+                    <div class="result-info">
+                        <div class="info-default">
+                            <img src="imgs/icon.png" alt="JarvisIR Logo" class="info-logo">
+                            <div class="info-text">
+                                <h4>Fog Scene</h4>
+                            </div>
+                        </div>
+                        <div class="info-hover">
+                            <p>
+                                <span class="highlight-text">The image depicts an outdoor scene viewed
+                                    through a wet windshield, with water droplets significantly
+                                    obscuring the view. The evaluated image exhibits severe
+                                    distortion caused by the water droplets, resulting in a loss of
+                                    sharpness and clarity. </span> 
+                                <br>So the tools are:<br/>
+                                {Task1: deraining <span class="highlight-text-orange">(Img2img-turbo)</span>, 
+                                    Task2: denosing <span class="highlight-text-orange">(SCUnet)</span>, 
+                                    Task3: deRaindrop <span class="highlight-text-orange">(IDT)</span>}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="comparison-slider">
+                        <figure class="comparison-figure">
+                            <img src="imgs/fog1.png" alt="Before" class="comparison-before">
+                            <div class="comparison-separator"></div>
+                            <img src="imgs/fog2.png" alt="After" class="comparison-after">
+                        </figure>
+                    </div>
+                    
+                </div>
+
+                <div class="result-card">
+                    
+                    <div class="result-info">
+                        <div class="info-default">
+                            <img src="imgs/icon.png" alt="JarvisIR Logo" class="info-logo">
+                            <div class="info-text">
+                                <h4>Night Scene</h4>
+                            </div>
+                        </div>
+                        <div class="info-hover">
+                            <p>
+                                <span class="highlight-text">The image depicts an outdoor scene viewed
+                                    through a wet windshield, with water droplets significantly
+                                    obscuring the view. The evaluated image exhibits severe
+                                    distortion caused by the water droplets, resulting in a loss of
+                                    sharpness and clarity. </span> 
+                                <br>So the tools are:<br/>
+                                {Task1: deraining <span class="highlight-text-orange">(Img2img-turbo)</span>, 
+                                    Task2: denosing <span class="highlight-text-orange">(SCUnet)</span>, 
+                                    Task3: deRaindrop <span class="highlight-text-orange">(IDT)</span>}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="comparison-slider">
+                        <figure class="comparison-figure">
+                            <img src="imgs/night1.png" alt="Before" class="comparison-before">
+                            <div class="comparison-separator"></div>
+                            <img src="imgs/night2.png" alt="After" class="comparison-after">
+                        </figure>
+                    </div>
+                </div>
+
+                <div class="result-card">
+                    <div class="result-info">
+                        <div class="info-default">
+                            <img src="imgs/icon.png" alt="JarvisIR Logo" class="info-logo">
+                            <div class="info-text">
+                                <h4>Rain Scene</h4>
+                            </div>
+                        </div>
+                        <div class="info-hover">
+                            <p>
+                                <span class="highlight-text">The image depicts an outdoor scene viewed
+                                    through a wet windshield, with water droplets significantly
+                                    obscuring the view. The evaluated image exhibits severe
+                                    distortion caused by the water droplets, resulting in a loss of
+                                    sharpness and clarity. </span> 
+                                <br>So the tools are:<br/>
+                                {Task1: deraining <span class="highlight-text-orange">(Img2img-turbo)</span>, 
+                                    Task2: denosing <span class="highlight-text-orange">(SCUnet)</span>, 
+                                    Task3: deRaindrop <span class="highlight-text-orange">(IDT)</span>}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="comparison-slider">
+                        <figure class="comparison-figure">
+                            <img src="imgs/before_rain1.png" alt="Before" class="comparison-before">
+                            <div class="comparison-separator"></div>
+                            <img src="imgs/after_rain1.png" alt="After" class="comparison-after">
+                        </figure>
+                    </div>
+                    
+                </div>
+
+                <div class="result-card">
+                    
+                    <div class="result-info">
+                        <div class="info-default">
+                            <img src="imgs/icon.png" alt="JarvisIR Logo" class="info-logo">
+                            <div class="info-text">
+                                <h4>Rain Scene</h4>
+                            </div>
+                        </div>
+                        <div class="info-hover">
+                            <p>
+                                <span class="highlight-text">The image depicts an outdoor scene viewed
+                                    through a wet windshield, with water droplets significantly
+                                    obscuring the view. The evaluated image exhibits severe
+                                    distortion caused by the water droplets, resulting in a loss of
+                                    sharpness and clarity. </span> 
+                                <br>So the tools are:<br/>
+                                {Task1: deraining <span class="highlight-text-orange">(Img2img-turbo)</span>, 
+                                    Task2: denosing <span class="highlight-text-orange">(SCUnet)</span>, 
+                                    Task3: deRaindrop <span class="highlight-text-orange">(IDT)</span>}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="comparison-slider">
+                        <figure class="comparison-figure">
+                            <img src="imgs/rain31.png" alt="Before" class="comparison-before">
+                            <div class="comparison-separator"></div>
+                            <img src="imgs/rain32.png" alt="After" class="comparison-after">
+                        </figure>
+                    </div>
+                </div>
+
+                <div class="result-card">
+                    <div class="result-info">
+                        <div class="info-default">
+                            <img src="imgs/icon.png" alt="JarvisIR Logo" class="info-logo">
+                            <div class="info-text">
+                                <h4>Snow Scene</h4>
+                            </div>
+                        </div>
+                        <div class="info-hover">
+                            <p>
+                                <span class="highlight-text">The image depicts an outdoor scene viewed
+                                    through a wet windshield, with water droplets significantly
+                                    obscuring the view. The evaluated image exhibits severe
+                                    distortion caused by the water droplets, resulting in a loss of
+                                    sharpness and clarity. </span> 
+                                <br>So the tools are:<br/>
+                                {Task1: deraining <span class="highlight-text-orange">(Img2img-turbo)</span>, 
+                                    Task2: denosing <span class="highlight-text-orange">(SCUnet)</span>, 
+                                    Task3: deRaindrop <span class="highlight-text-orange">(IDT)</span>}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="comparison-slider">
+                        <figure class="comparison-figure">
+                            <img src="imgs/snow1.png" alt="Before" class="comparison-before">
+                            <div class="comparison-separator"></div>
+                            <img src="imgs/snow2.png" alt="After" class="comparison-after">
+                        </figure>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+        
+        <section id="abstract" class="fade-in">
+            <h2>Abstract</h2>
+            <div class="abstract">
+                <p>Vision-centric perception systems for autonomous driving often struggle with unpredictable and coupled weather degradations in the wild. Current solutions are often limited, as they either depend on specific degradation priors or suffer from significant domain gaps. To enable robust and autonomous operation in real-world conditions, we propose JarvisIR, a VLM-powered agent that leverages the VLM (e.g., Llava-Llama3) as a controller to manage multiple expert restoration models.</p>
+                
+                <p>To further enhance system robustness, reduce hallucinations, and improve generalizability in real-world adverse weather, JarvisIR employs a novel two-stage framework consisting of supervised fine-tuning and human feedback alignment. Specifically, to address the lack of paired data in real-world scenarios, the human feedback alignment enables the VLM to be fine-tuned effectively on large-scale real-world data in an unsupervised manner.</p>
+                
+                <p>To support the training and evaluation of JarvisIR, we introduce CleanBench, a comprehensive dataset consisting of high-quality and large-scale instruction-responses pairs, including <strong>150K</strong> synthetic entries and <strong>80K</strong> real entries. Extensive experiments demonstrate that JarvisIR exhibits superior decision-making and restoration capabilities. Compared with existing methods, it achieves a <strong>50%</strong> improvement in the average of all perception metrics on CleanBench-Real. Furthermore, it effectively supports high-level tasks, such as semantic segmentation and object detection.</p>
+            </div>
+        </section>
+        
+        <section id="method" class="fade-in">
+            <h2>Method</h2>
+            <div class="method-overview">
+                <div class="method-figure">
+                    <img src="imgs/framework.png" alt="JarvisIR Framework" />
+                </div>
+                <p><strong>Figure 1:</strong> Overview of our JarvisIR framework, which utilizes a VLM-powered agent to manage multiple expert restoration models through a two-stage training approach.</p>
+            </div>
+            
+            <div class="key-contributions">
+                <h3>Key Contributions</h3>
+                <ul class="contributions-list">
+                    <li>We propose JarvisIR, a VLM-powered agent that leverages vision-language models as controllers to manage multiple expert restoration models for robust image restoration in autonomous driving.</li>
+                    <li>We develop a novel two-stage framework with supervised fine-tuning and human feedback alignment to enhance system robustness in real-world adverse weather conditions.</li>
+                    <li>We introduce CleanBench, a comprehensive dataset with 150K synthetic and 80K real instruction-response pairs for training and evaluation.</li>
+                    <li>Extensive experiments demonstrate that JarvisIR achieves a 50% improvement in perception metrics compared to existing methods.</li>
+                </ul>
+            </div>
+        </section>
+        
+        <section id="dataset" class="fade-in">
+            <h2>CleanBench Dataset</h2>
+            <p>To support the training and evaluation of JarvisIR, we introduce CleanBench, a comprehensive dataset for image restoration in autonomous driving scenarios.</p>
+            
+            <div class="dataset-info">
+                <div class="dataset-card">
+                    <h3><i class="fas fa-cogs"></i> CleanBench-Synthetic</h3>
+                    <p>Carefully simulated degradations with perfect ground truth for controlled evaluation. </p>
+                    <div class="dataset-stats">
+                        <div class="stat">
+                            <div class="stat-value">150K</div>
+                            <div class="stat-label">Image Pairs</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">10</div>
+                            <div class="stat-label">Degradation Types</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">5</div>
+                            <div class="stat-label">Severity Levels</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dataset-card">
+                    <h3><i class="fas fa-cloud-sun-rain"></i> CleanBench-Real</h3>
+                    <p>Real-world adverse weather images collected from autonomous driving scenarios with expert annotations and feedback.</p>
+                    <div class="dataset-stats">
+                        <div class="stat">
+                            <div class="stat-value">80K</div>
+                            <div class="stat-label">Image Pairs</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">8</div>
+                            <div class="stat-label">Weather Types</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">12</div>
+                            <div class="stat-label">Locations</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="paper" class="fade-in">
+            <h2>Paper</h2>
+            <div class="paper-info">
+                <div class="paper-image">
+                    <img src="imgs/first_page.png" alt="Paper First Page" />
+                </div>
+                
+                <div class="paper-metadata">
+                    <h3>Paper Information</h3>
+                    <p><strong>Title:</strong> JarvisIR: Elevating Autonomous Driving Perception with Intelligent Image Restoration</p>
+                    <p><strong>Conference:</strong> IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 2025</p>
+                    <p><strong>Publication Date:</strong> June 2025</p>
+                    
+                    <h3>Citation</h3>
+                    <div class="citation-box">@inproceedings{jarvisir2025,
+  title={JarvisIR: Elevating Autonomous Driving Perception with Intelligent Image Restoration},
+  author={Author1 and Author2 and Author3 and Author4 and Author5},
+  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year={2025}
+}</div>
+                    <button class="copy-button" onclick="navigator.clipboard.writeText(document.querySelector('.citation-box').textContent)"><i class="fas fa-copy"></i> Copy BibTeX</button>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="footer-content">
+            <p class="footer-note">If you find our work useful, please consider citing our paper.</p>
+            
+            <div class="footer-links">
+                <a href="#">Home</a>
+                <a href="#">Paper</a>
+                <a href="#">Code</a>
+                <a href="#">Dataset</a>
+                <a href="#">Contact</a>
+            </div>
+            
+            <p class="copyright">© 2025 Your Lab or Institution. All Rights Reserved.</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Intersection Observer for fade-in animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            
+            fadeElements.forEach(element => {
+                observer.observe(element);
+            });
+        });
+
+        // Text alternation
+        document.addEventListener('DOMContentLoaded', function() {
+            const textItems = document.querySelectorAll('.text-item');
+            let currentIndex = 0;
+            
+            function switchText() {
+                const currentText = textItems[currentIndex];
+                const nextIndex = (currentIndex + 1) % textItems.length;
+                const nextText = textItems[nextIndex];
+                
+                // 当前文本向下滑出
+                currentText.style.animation = 'slideOutDown 1s ease-out forwards';  // 改为向下消失
+                
+                // 等待一小段时间后开始下一个文本的动画
+                setTimeout(() => {
+                    nextText.style.animation = 'slideInUp 1s ease-out forwards';
+                    currentIndex = nextIndex;
+                }, 1000);
+            }
+            
+            // 设置初始状态
+            textItems[0].style.animation = 'slideInUp 1s ease-out forwards';
+            
+            // 每5秒切换一次文本
+            setInterval(switchText, 6000);
+        });
+
+        // 添加导航栏滚动效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // ... 现有代码 ...
+            
+            // 导航栏滚动效果
+            const topNav = document.querySelector('.top-nav');
+            const heroHeight = document.querySelector('.hero-header').offsetHeight;
+            
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > heroHeight - 100) {
+                    topNav.classList.add('scrolled');
+                } else {
+                    topNav.classList.remove('scrolled');
+                }
+            });
+        });
+
+        // 添加图片对比滑动功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const sliders = document.querySelectorAll('.comparison-slider');
+            
+            sliders.forEach(slider => {
+                const before = slider.querySelector('.comparison-before');
+                const separator = slider.querySelector('.comparison-separator');
+                let isResizing = false;
+                
+                // 设置初始位置
+                before.style.clipPath = `polygon(0 0, 50% 0, 50% 100%, 0 100%)`;
+                separator.style.left = '50%';
+                
+                function handleResize(e) {
+                    if (!isResizing) return;
+                    
+                    const rect = slider.getBoundingClientRect();
+                    let x;
+                    
+                    if (e.type === 'touchmove') {
+                        x = e.touches[0].clientX - rect.left;
+                    } else {
+                        x = e.clientX - rect.left;
+                    }
+                    
+                    const percent = Math.min(Math.max(0, x / rect.width * 100), 100);
+                    
+                    before.style.clipPath = `polygon(0 0, ${percent}% 0, ${percent}% 100%, 0 100%)`;
+                    separator.style.left = `${percent}%`;
+                }
+                
+                separator.addEventListener('mousedown', (e) => {
+                    isResizing = true;
+                    e.preventDefault();
+                });
+                
+                window.addEventListener('mousemove', handleResize);
+                window.addEventListener('mouseup', () => {
+                    isResizing = false;
+                });
+                
+                // 触摸设备支持
+                separator.addEventListener('touchstart', (e) => {
+                    isResizing = true;
+                    e.preventDefault();
+                });
+                
+                window.addEventListener('touchmove', (e) => {
+                    if (!isResizing) return;
+                    handleResize(e);
+                });
+                
+                window.addEventListener('touchend', () => {
+                    isResizing = false;
+                });
+            });
+        });
+    </script>
+</body>
+</html>
