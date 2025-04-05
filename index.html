@@ -138,6 +138,8 @@
             min-height: calc(100vh - 100px);
             display: flex;
             flex-direction: column;
+            width: 100%; /* Ensure full width */
+            overflow-x: hidden; /* Prevent horizontal overflow */
         }
         
         section {
@@ -286,6 +288,7 @@
             border-radius: 8px 8px 0 0;
             user-select: none;
             background-color: #f8f9fa; /* Add background color */
+            touch-action: none; /* Prevent default touch actions like scrolling while interacting with slider */
         }
         
         /* Update the comparison label positioning */
@@ -302,6 +305,7 @@
             z-index: 5;
             transition: opacity 0.3s ease; /* Add smooth transition */
         }
+        
         
         .input-label {
             right: 10px;
@@ -606,6 +610,7 @@
             text-align: center;
             margin-top: auto;
             width: 100%;
+            position: relative; /* Change from fixed */
         }
         
         .footer-content {
@@ -775,6 +780,7 @@
             height: 100vh;
             overflow: hidden;
             background-color: #ffffff;
+            min-height: 600px; /* Add minimum height */
         }
         
         .slider-container {
@@ -810,33 +816,59 @@
         }
         
         .slider-item {
-            flex: 0 0 16%;  /* 保持18%的宽度以适应更多项目 */
-            height: 95%;
+            flex: 0 0 15%;  /* 保持17%的宽度以适应更多项目 */
+            height: 100%;
             position: relative;
             padding: 0;  /* 移除内边距以消除间隙 */
-            margin: 0 -6px;  /* 使用负边距让元素靠得更近 */
+            margin: 0 2.8px;  /* 使用边距设置间距 */
         }
         
         .slider-item img {
             width: 100%;  /* 保持100%以填充容器 */
             height: 100%;
-            object-fit: cover;
+            object-fit: fill;
             opacity: 1;
         }
 
         .slider-item2 {
-            flex: 0 0 19%;  /* 保持18%的宽度以适应更多项目 */
+            flex: 0 0 15%;  /* 保持19%的宽度以适应更多项目 */
             height: 100%;
             position: relative;
             padding: 0;  /* 移除内边距以消除间隙 */
-            margin: 0 -6px ;  /* 使用负边距让元素靠得更近 */
+            margin: 0 2.8px;  /* 使用边距设置间距 */
         }
         
         .slider-item2 img {
             width: 100%;  /* 保持100%以填充容器 */
             height: 100%;
-            object-fit: cover;
+            object-fit: fill;
             opacity: 1;
+        }
+
+        /* 添加媒体查询，调整窄屏下的样式 */
+        @media (max-width: 768px) {
+            .slider-item {
+                flex: 0 0 25%;  /* 在窄屏下增加宽度 */
+                margin: 0 3px;  /* 增加边距 */
+            }
+            
+            .slider-item2 {
+                flex: 0 0 25%;  /* 在窄屏下增加宽度 */
+                margin: 0 3px;  /* 增加边距 */
+            }
+        }
+
+        /* 针对更小屏幕的额外调整 */
+        @media (max-width: 480px) {
+            .slider-item {
+                flex: 0 0 33%;  /* 在更窄的屏幕下进一步增加宽度 */
+                margin: 0 4px;  /* 进一步增加边距 */
+            }
+            
+            .slider-item2 {
+                flex: 0 0 33%;  /* 在更窄的屏幕下进一步增加宽度 */
+                margin: 0 4px;  /* 进一步增加边距 */
+            }
         }
         
         .hero-title {
@@ -1086,6 +1118,7 @@
             margin-top: 3rem;
             padding-bottom: 0rem;
             overflow: hidden;
+            width: 100%;
         }
         
         /* Add gradient masks for carousel */
@@ -1094,7 +1127,7 @@
             position: absolute;
             top: 0;
             height: 100%;
-            width: 150px; /* Approximately half the width of a carousel item */
+            width: 100px; /* Reduced from 150px to work better on mobile */
             z-index: 10;
             pointer-events: none; /* Allow clicks to pass through */
             border-radius: 8px; /* Adding rounded corners to match other elements */
@@ -1113,7 +1146,7 @@
         /* Animation for carousel auto-scroll */
         @keyframes slideCarousel {
             0% { transform: translateX(0); }
-            100% { transform: translateX(calc(-100% / 2)); }
+            100% { transform: translateX(calc(-100% / 2)); } /* Ensure we move through all items */
         }
         
         .results-carousel {
@@ -1126,6 +1159,7 @@
             scrollbar-width: none;
             width: 200%; /* Set to 200% to accommodate duplicated items */
             animation: slideCarousel 30s linear infinite; /* Add auto-scroll animation */
+            gap: 0.5rem; /* Add explicit gap between items */
         }
         
         .results-carousel:hover {
@@ -1133,8 +1167,9 @@
         }
         
         .carousel-item {
-            flex: 0 0 400px;  /* Change from percentage-based to fixed width */
-            min-width: 400px;
+            flex: 0 0 400px;  /* Change from fixed width to percentage-based for responsiveness */
+            min-width: 300px; /* Reduce min-width for smaller screens */
+            max-width: 400px; /* Add max-width to limit size on larger screens */
             scroll-snap-align: start;
             border-radius: 8px;
             overflow: hidden;
@@ -1233,6 +1268,82 @@
         .results-carousel-container:hover .results-carousel {
             animation-play-state: paused; /* Pause animation when hovering over the container */
         }
+
+        /* Add responsive adjustments for the carousel */
+        @media (max-width: 768px) {
+            .carousel-item {
+                flex: 0 0 90%; /* Take up most of the container width on mobile */
+                min-width: 250px; /* Further reduce min-width for smaller screens */
+                margin-right: 0.25rem; /* Reduce margin on small screens */
+            }
+            
+            /* Adjust animation speed based on screen size */
+            @keyframes slideCarousel {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(calc(-180%)); } /* Adjust for fewer visible items */
+            }
+        }
+        
+        /* 添加针对窄屏的标题样式 */
+        @media (max-width: 768px) {
+            .hero-title h1 {
+                font-size: 3.5rem;
+                margin-top: 20px;
+            }
+            .alternating-text  h2 {
+                font-size: 2.3rem;
+            }
+
+            .alternating-text {
+                height: 200px;
+                margin-top: 30px;
+            }
+
+            
+            .text-item {
+                font-size: 40px;
+                line-height: 1.1;
+            }
+            
+            .hero-title {
+                top: 52%;
+            }
+            
+            .logo {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .authors-section {
+                bottom: 1rem;
+            }
+        }
+        
+        /* 针对更小屏幕的额外调整 */
+        @media (max-width: 480px) {
+            .hero-title h1 {
+                font-size: 2.8rem;
+                margin-top: 10px;
+                gap: 10px;
+            }
+            .alternating-text  h2 {
+                font-size: 2.3rem;
+            }
+
+            .text-item {
+                font-size: 30px;
+            }
+            
+            .alternating-text {
+                
+                height: 180px;
+            }
+            
+            .logo {
+                width: 50px;
+                height: 50px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1247,7 +1358,7 @@
     </nav>
 
     <div class="hero-header">
-        <div class="slider-container" style="height: 52%; margin-bottom: -18px;">
+        <div class="slider-container" style="height: 50%; ">
             <div class="slider-row slider-top">
                 <div class="slider-item"><img src="teaser/snow1.png" alt="雪天场景"></div>
                 <div class="slider-item"><img src="teaser/snow2.png" alt="雪天场景"></div>
@@ -1261,7 +1372,7 @@
             </div>
         </div>
         
-        <div class="slider-container" style="height: 52%; margin-top: -18px;">
+        <div class="slider-container" style="height: 50%;">
             <div class="slider-row slider-bottom">
                 <div class="slider-item2"><img src="teaser/rain1.png" alt="雨天场景"></div>
                 <div class="slider-item2"><img src="teaser/nighthaze2.png" alt="夜间雾霾场景"></div>
@@ -1282,7 +1393,7 @@
                 JarvisIR
             </h1>
             <div class="alternating-text">
-                <h2 class="text-item active"><em><strong>For Intelligent Image Restoration</strong></em></h2>
+                <h2 class="text-item active"><em><strong><p></p>For Intelligent Image Restoration</strong></em></h2>
                 <h2 class="text-item"><em><strong>Elevating Autonomous Driving Perception with Intelligent Image Restoration</strong></em></h2>
             </div>
         </div>
@@ -1708,6 +1819,34 @@
                 carousel.appendChild(clone);
             });
             
+            // Adjust the carousel animation properties based on screen width
+            function updateCarouselProperties() {
+                const isMobile = window.innerWidth <= 768;
+                
+                // Set different animation duration for mobile
+                carousel.style.animationDuration = isMobile ? '50s' : '30s';
+                
+                // Reset the animation when properties change
+                carousel.style.animation = 'none';
+                carousel.offsetHeight; // Trigger reflow
+                carousel.style.animation = `slideCarousel ${isMobile ? '50s' : '30s'} linear infinite`;
+            }
+            
+            // Initial setup
+            updateCarouselProperties();
+            
+            // Update on window resize
+            window.addEventListener('resize', updateCarouselProperties);
+            
+            // Pause animation on hover
+            carousel.addEventListener('mouseenter', () => {
+                carousel.style.animationPlayState = 'paused';
+            });
+            
+            carousel.addEventListener('mouseleave', () => {
+                carousel.style.animationPlayState = 'running';
+            });
+            
             // Calculate item width including gap
             const itemWidth = items[0].offsetWidth + 24; // Adding the gap of 1.5rem (24px)
             
@@ -1723,14 +1862,11 @@
                 // Initial position
                 let isDown = false;
                 let startX;
-                let scrollLeft;
                 
-                function handleMouseMove(e) {
-                    if (!isDown) return;
-                    e.preventDefault();
-                    
-                    const x = e.pageX - slider.getBoundingClientRect().left;
-                    const percent = Math.max(0, Math.min(100, (x / slider.offsetWidth) * 100));
+                function updateSliderPosition(xPos) {
+                    const sliderRect = slider.getBoundingClientRect();
+                    const x = xPos - sliderRect.left;
+                    const percent = Math.max(0, Math.min(100, (x / sliderRect.width) * 100));
                     
                     beforeImage.style.clipPath = `polygon(0 0, ${percent}% 0, ${percent}% 100%, 0 100%)`;
                     separator.style.left = `${percent}%`;
@@ -1739,14 +1875,14 @@
                     const inputLabel = slider.querySelector('.input-label');
                     const outputLabel = slider.querySelector('.output-label');
                     
-                    // Hide input label when slider is near right edge (>90%)
+                    // Hide input label when slider is near right edge (>80%)
                     if (percent > 80) {
                         inputLabel.style.opacity = '0';
                     } else {
                         inputLabel.style.opacity = '1';
                     }
                     
-                    // Hide output label when slider is near left edge (<10%)
+                    // Hide output label when slider is near left edge (<20%)
                     if (percent < 20) {
                         outputLabel.style.opacity = '0';
                     } else {
@@ -1754,47 +1890,34 @@
                     }
                 }
                 
+                function handleMouseMove(e) {
+                    if (!isDown) return;
+                    e.preventDefault();
+                    updateSliderPosition(e.pageX);
+                }
+                
                 function handleTouchMove(e) {
                     if (!isDown) return;
                     e.preventDefault();
-                    
-                    const x = e.touches[0].pageX - slider.getBoundingClientRect().left;
-                    const percent = Math.max(0, Math.min(100, (x / slider.offsetWidth) * 100));
-                    
-                    beforeImage.style.clipPath = `polygon(0 0, ${percent}% 0, ${percent}% 100%, 0 100%)`;
-                    separator.style.left = `${percent}%`;
-                    
-                    // Add same label visibility logic for touch events
-                    const inputLabel = slider.querySelector('.input-label');
-                    const outputLabel = slider.querySelector('.output-label');
-                    
-                    if (percent > 90) {
-                        inputLabel.style.opacity = '0';
-                    } else {
-                        inputLabel.style.opacity = '1';
-                    }
-                    
-                    if (percent < 10) {
-                        outputLabel.style.opacity = '0';
-                    } else {
-                        outputLabel.style.opacity = '1';
-                    }
+                    updateSliderPosition(e.touches[0].pageX);
                 }
                 
                 slider.addEventListener('mousedown', (e) => {
                     isDown = true;
-                    startX = e.pageX - slider.offsetLeft;
+                    slider.style.cursor = 'grabbing';
+                    startX = e.pageX;
                     handleMouseMove(e);
                 });
                 
                 slider.addEventListener('touchstart', (e) => {
                     isDown = true;
-                    startX = e.touches[0].pageX - slider.offsetLeft;
+                    startX = e.touches[0].pageX;
                     handleTouchMove(e);
-                });
+                }, { passive: false });
                 
                 window.addEventListener('mouseup', () => {
                     isDown = false;
+                    slider.style.cursor = 'grab';
                 });
                 
                 window.addEventListener('touchend', () => {
@@ -1802,7 +1925,10 @@
                 });
                 
                 slider.addEventListener('mousemove', handleMouseMove);
-                slider.addEventListener('touchmove', handleTouchMove);
+                slider.addEventListener('touchmove', handleTouchMove, { passive: false });
+                
+                // Set initial position (centered)
+                updateSliderPosition(slider.getBoundingClientRect().left + slider.offsetWidth / 2);
             });
             
             // Update conversation on hover
